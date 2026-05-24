@@ -1,0 +1,16 @@
+[package]
+name = "vid2txt"
+version = "0.1.0"
+edition = "2021"
+description = "Play videos as ASCII art in the terminal"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+crossterm = "0.28"
+ffmpeg-sidecar = "2.5"
+
+[features]
+default = []
+download_ffmpeg = ["ffmpeg-sidecar/download_ffmpeg"]
