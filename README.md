@@ -25,17 +25,46 @@ cargo build --release --features download_ffmpeg
 
 ## Install
 
-From this directory:
+### macOS or Linux (recommended)
 
 ```bash
-cargo install --path .
+curl -fsSL https://raw.githubusercontent.com/horse-lover-fat/vid2txt/master/install.sh | bash
 ```
 
-Or build a release binary:
+This downloads the latest [GitHub release](https://github.com/horse-lover-fat/vid2txt/releases) for your OS and CPU, installs the binary to `~/.local/bin/vid2txt`, and adds `~/.local/bin` to your shell PATH. **FFmpeg must still be on your PATH** (see [Prerequisites](#prerequisites)).
+
+| OS | Architectures |
+|----|----------------|
+| macOS | Apple Silicon (`aarch64`), Intel (`x86_64`) |
+| Linux | ARM64 (`aarch64`), x86_64 |
+
+Open a new terminal after installing, then run:
 
 ```bash
+vid2txt --help
+```
+
+### Build from source
+
+Requires [rustup](https://rustup.rs/) and FFmpeg on your PATH:
+
+```bash
+git clone https://github.com/horse-lover-fat/vid2txt.git
+cd vid2txt
 cargo build --release
-# binary at target/release/vid2txt
+./target/release/vid2txt --help
+```
+
+Install the built binary to `~/.local/bin`:
+
+```bash
+./scripts/install-cli.sh
+```
+
+To bundle an FFmpeg downloader into the binary:
+
+```bash
+VID2TXT_FEATURES=download_ffmpeg ./scripts/install-cli.sh
 ```
 
 ## Usage
@@ -93,3 +122,40 @@ vid2txt --width 120 --height 40 sample.mp4
 ## Supported formats
 
 Any format FFmpeg can decode (`.mp4`, `.mov`, `.webm`, `.mkv`, `.avi`, etc.).
+
+## Development
+
+### Project layout
+
+```text
+src/
+  main.rs       CLI entry point
+  cli.rs        Argument definitions
+  video.rs      FFmpeg decode and frame extraction
+  ascii.rs      Density mapping and color output
+  terminal.rs   Alternate screen playback loop
+scripts/        install, release archive, and macOS DMG helpers
+```
+
+### Tests
+
+```bash
+cargo test
+```
+
+### macOS `.dmg`
+
+```bash
+./scripts/build-dmg.sh
+```
+
+Output: `dist/vid2txt-0.1.0-macos.dmg`
+
+### Publishing a release
+
+Tag and push to trigger the GitHub Actions release workflow:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```

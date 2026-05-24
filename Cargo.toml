@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 description = "Play videos as ASCII art in the terminal"
 license = "MIT"
+autobins = false
+
+[[bin]]
+name = "vid2txt"
+path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
