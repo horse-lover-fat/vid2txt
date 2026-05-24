@@ -12,7 +12,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+
+      - name: Test
+        run: cargo test --verbose
+
   build-macos:
+    needs: validate
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
@@ -40,6 +65,7 @@ jobs:
             dist/vid2txt-macos-x86_64.tar.gz
 
   build-linux:
+    needs: validate
     strategy:
       fail-fast: false
       matrix:
