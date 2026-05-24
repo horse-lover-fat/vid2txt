@@ -4,7 +4,7 @@ Play a video file in the terminal as ASCII art. Each frame is decoded with FFmpe
 
 ## Prerequisites
 
-**FFmpeg** must be available on your `PATH` (including `ffprobe` for metadata).
+**FFmpeg** must be available on your `PATH`. If `ffprobe` is present, it is used for metadata; otherwise vid2txt falls back to FFmpeg for probing.
 
 ```bash
 # macOS
