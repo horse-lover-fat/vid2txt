@@ -128,3 +128,36 @@ pub fn play(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::compute_render_size;
+
+    #[test]
+    fn respects_explicit_width_and_height() {
+        assert_eq!(compute_render_size(120, 40, 1920, 1080, Some(80), Some(20), false), (80, 20));
+    }
+
+    #[test]
+    fn letterboxes_wide_video() {
+        let (cols, rows) = compute_render_size(100, 50, 1920, 1080, None, None, false);
+        assert_eq!(cols, 99);
+        assert!(rows < 49);
+        assert!(rows > 0);
+    }
+
+    #[test]
+    fn letterboxes_tall_video() {
+        let (cols, rows) = compute_render_size(100, 50, 1080, 1920, None, None, false);
+        assert!(cols < 99);
+        assert_eq!(rows, 49);
+    }
+
+    #[test]
+    fn no_margin_allows_extra_row_for_tall_video() {
+        let (_, rows_with_margin) = compute_render_size(100, 50, 1080, 1920, None, None, false);
+        let (_, rows_no_margin) = compute_render_size(100, 50, 1080, 1920, None, None, true);
+        assert_eq!(rows_with_margin, 49);
+        assert_eq!(rows_no_margin, 50);
+    }
+}

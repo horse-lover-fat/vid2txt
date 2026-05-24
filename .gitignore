@@ -1,5 +1,4 @@
 /target
-Cargo.lock
 *.mp4
 *.mov
 *.webm
